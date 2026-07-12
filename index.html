@@ -60,14 +60,6 @@
       --line-height-body:     1.9;
     }
 
-    body.size-large {
-      font-size: calc(var(--font-size-body) + 3px);
-    }
-
-    body.size-largest {
-      font-size: calc(var(--font-size-body) + 6px);
-    }
-
     /* ── SKIP LINK ── */
     .skip-link {
       position: absolute;
@@ -91,17 +83,16 @@
       font-weight: var(--font-weight-body);
       font-size: var(--font-size-body);
       line-height: var(--line-height-body);
-      transition: font-size 0.2s;
     }
 
     /* ── ACCESSIBILITY BAR ── */
     .a11y-bar {
       background: #EEEEE8;
       border-bottom: 1px solid var(--border);
-      padding: 0.6rem 2rem;
+      padding: 0.75rem 2rem;
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.6rem;
     }
 
     .a11y-note {
@@ -165,6 +156,37 @@
     .a11y-btn:focus-visible {
       outline: 3px solid var(--cyan);
       outline-offset: 2px;
+    }
+
+    /* ── ZOOM NOTE ── */
+    .zoom-note {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      color: var(--text-soft);
+      border-top: 1px solid var(--border);
+      padding-top: 0.6rem;
+      line-height: 1.7;
+    }
+
+    .zoom-note strong {
+      color: var(--text-mid);
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    .zoom-note .zoom-method {
+      margin-bottom: 0.4rem;
+    }
+
+    .zoom-note kbd {
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 3px;
+      padding: 0 0.3rem;
+      font-family: var(--font-body);
+      font-size: 0.72rem;
+      color: var(--text);
     }
 
     /* ── HEADER ── */
@@ -243,7 +265,6 @@
       margin-bottom: 1.25rem;
     }
 
-    /* ── HERO IMAGE PLACEHOLDER ── */
     .hero-image-placeholder {
       width: 100%;
       max-width: 700px;
@@ -289,14 +310,15 @@
       border-bottom: 1px solid var(--border);
     }
 
+    /* ── SECTION LABELS — bumped up ── */
     .section-label {
       font-family: var(--font-body);
-      font-size: 0.7rem;
-      letter-spacing: 0.25em;
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--cyan);
       font-weight: 600;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.5rem;
     }
 
     h2 {
@@ -304,16 +326,8 @@
       font-size: 1.5rem;
       font-weight: var(--font-weight-display);
       color: var(--text);
-      margin-bottom: 0.4rem;
-      line-height: 1.25;
-    }
-
-    .section-subtitle {
-      font-family: var(--font-body);
-      font-size: 1rem;
-      color: var(--text-mid);
       margin-bottom: 1.25rem;
-      font-style: italic;
+      line-height: 1.25;
     }
 
     h3 {
@@ -335,11 +349,7 @@
     em { font-style: italic; color: var(--text-mid); }
     strong { font-weight: 700; color: var(--text); }
 
-    /* ── STORAGE GRID ── */
-    .storage-intro {
-      margin-bottom: 0.75rem;
-    }
-
+    /* ── STORAGE GRID — 2x2 ── */
     .click-hint {
       font-family: var(--font-body);
       font-size: 0.85rem;
@@ -350,7 +360,7 @@
 
     .storage-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(2, 1fr);
       gap: 1rem;
       margin-top: 1rem;
     }
@@ -362,6 +372,8 @@
       border-radius: 4px;
       position: relative;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
     .storage-card::before {
@@ -380,27 +392,14 @@
       padding: 1.25rem 1.25rem 0.75rem;
     }
 
-    .card-type {
-      font-family: var(--font-body);
-      font-size: 0.65rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-    }
-
-    .optical  .card-type { color: var(--cyan); }
-    .magnetic .card-type { color: var(--lime); }
-    .flash    .card-type { color: var(--purple); }
-    .cloud    .card-type { color: var(--orange); }
-
+    /* card-name only — no colored label */
     .card-name {
       font-family: var(--font-display);
       font-size: 1.1rem;
       font-weight: var(--font-weight-display);
       color: var(--text);
-      margin-bottom: 0;
       line-height: 1.2;
+      margin-bottom: 0;
     }
 
     /* ── CARD IMAGE PLACEHOLDER ── */
@@ -426,10 +425,11 @@
       color: var(--cyan);
     }
 
-    /* ── TOGGLE BUTTON ── */
+    /* ── TOGGLE BUTTON — flush to bottom ── */
     .card-toggle {
       width: 100%;
-      padding: 0.6rem 1.25rem;
+      margin-top: auto;
+      padding: 0.65rem 1.25rem;
       background: none;
       border: none;
       border-top: 1px solid var(--border);
@@ -452,13 +452,10 @@
       font-size: 0.7rem;
       transition: transform 0.2s;
       display: inline-block;
+      flex-shrink: 0;
     }
 
-    .card-toggle[aria-expanded="true"] .toggle-arrow {
-      transform: rotate(180deg);
-    }
-
-    /* ── CARD BODY (collapsible) ── */
+    /* ── CARD BODY ── */
     .card-body {
       display: none;
       padding: 1rem 1.25rem 1.25rem;
@@ -468,24 +465,24 @@
     .card-body.open { display: block; }
 
     .lifespan-block {
-      margin-bottom: 0.85rem;
+      margin-bottom: 1rem;
     }
 
     .lifespan-main {
       font-family: var(--font-body);
-      font-size: 0.82rem;
+      font-size: 0.85rem;
       font-weight: 600;
       color: var(--text);
-      margin-bottom: 0.2rem;
+      margin-bottom: 0.4rem;
     }
 
     .lifespan-detail {
       font-family: var(--font-body);
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       color: var(--text-mid);
       padding-left: 0.75rem;
       border-left: 2px solid var(--border);
-      margin-bottom: 0.15rem;
+      margin-bottom: 0.25rem;
       line-height: 1.5;
     }
 
@@ -494,14 +491,17 @@
       font-size: var(--font-size-card);
       color: var(--text-mid);
       line-height: 1.7;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.85rem;
     }
+
+    .card-desc:last-child { margin-bottom: 0; }
 
     .card-note {
       font-family: var(--font-body);
       font-size: 0.8rem;
       color: var(--text-soft);
       font-style: italic;
+      margin-top: 0.5rem;
     }
 
     /* ── CALLOUT ── */
@@ -516,23 +516,31 @@
 
     .callout-label {
       font-family: var(--font-body);
-      font-size: 0.75rem;
-      letter-spacing: 0.2em;
+      font-size: 1rem;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
       color: var(--danger);
       font-weight: 700;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
     }
 
     .callout p {
       color: var(--text);
       font-size: 1rem;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.85rem;
     }
 
     .callout p:last-child { margin-bottom: 0; }
 
     /* ── TIMELINE ── */
+    .timeline-section-heading {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: var(--font-weight-display);
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+
     .timeline {
       margin-top: 2rem;
       display: flex;
@@ -545,9 +553,10 @@
       gap: 0 0.75rem;
     }
 
+    /* ── TIMELINE YEAR — bumped up ── */
     .tl-year {
       font-family: var(--font-display);
-      font-size: 0.72rem;
+      font-size: 0.85rem;
       font-weight: var(--font-weight-display);
       color: var(--cyan);
       text-align: right;
@@ -583,7 +592,7 @@
       font-size: 0.95rem;
       font-weight: 700;
       color: var(--text);
-      margin-bottom: 0.15rem;
+      margin-bottom: 0.25rem;
     }
 
     .tl-format.now { color: var(--lime); }
@@ -624,7 +633,7 @@
       font-size: 0.95rem;
       font-weight: 700;
       color: var(--text);
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.5rem;
     }
 
     .rule-desc {
@@ -661,7 +670,6 @@
     .blink { animation: blink 1.2s step-end infinite; color: var(--cyan); }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-    /* ── FOCUS ── */
     :focus-visible {
       outline: 3px solid var(--cyan);
       outline-offset: 3px;
@@ -741,12 +749,12 @@
       .rule-grid { grid-template-columns: 1fr; }
       .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
       .timeline-item { grid-template-columns: 4rem 1.25rem 1fr; }
-      .a11y-controls { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+      .a11y-controls { flex-direction: column; align-items: flex-start; }
     }
 
     @media (prefers-reduced-motion: reduce) {
       .blink { animation: none; opacity: 1; }
-      body, .toggle-arrow { transition: none; }
+      .toggle-arrow { transition: none; }
     }
 
     @media (prefers-contrast: more) {
@@ -773,12 +781,12 @@
         <button class="a11y-btn" data-font="font-readable" aria-pressed="false">Readable (clearer text)</button>
         <button class="a11y-btn" data-font="font-accessible" aria-pressed="false">High legibility (largest text)</button>
       </div>
-      <div class="a11y-group" role="group" aria-label="Text size">
-        <span class="a11y-group-label">Text size adjustment:</span>
-        <button class="a11y-btn active" data-size="size-regular" aria-pressed="true">Regular</button>
-        <button class="a11y-btn" data-size="size-large" aria-pressed="false">Large</button>
-        <button class="a11y-btn" data-size="size-largest" aria-pressed="false">Largest</button>
-      </div>
+    </div>
+    <div class="zoom-note" role="note">
+      <strong>Note on text size:</strong>
+      <p class="zoom-method">If you changed the font using the buttons above and still find the text difficult to read, your browser has a built-in zoom feature that can make everything larger and easier to see.</p>
+      <p class="zoom-method"><strong>Using your keyboard:</strong> Hold the <kbd>Ctrl</kbd> key (Windows) or <kbd>Command</kbd> key (Mac) and press the <kbd>+</kbd> key to make text larger. Press <kbd>Ctrl</kbd>/<kbd>Command</kbd> and <kbd>−</kbd> to make it smaller again.</p>
+      <p class="zoom-method"><strong>Using your browser menu:</strong> Look for three small dots or three small lines in the top right corner of your browser window. Click on that and look for a Zoom option. You will see a percentage — 100% is the normal size. Click the + next to that percentage to make everything larger. Most people find 125% or 150% comfortable for reading.</p>
     </div>
   </div>
 
@@ -803,7 +811,6 @@
       <p class="hero-eyebrow" aria-hidden="true">// A public information resource //</p>
       <h1>IS MY DATA STILL THERE?</h1>
 
-      <!-- HERO IMAGE PLACEHOLDER -->
       <div class="hero-image-placeholder" role="img" aria-label="Hero image placeholder — suggested: collage of old storage media (CDs, floppy disks, VHS tapes, Zip disks)">
         <span class="placeholder-label">[ HERO IMAGE ]</span>
         <span>Suggested: collage of old storage media</span>
@@ -823,16 +830,14 @@
         <p class="section-label" aria-hidden="true">01 / Storage types</p>
         <h2 id="storage-heading">How data is stored and what degrades it</h2>
 
-        <div class="storage-intro">
-          <p>
-            There are many types of data storage available, but not all storage is created equal. Older storage
-            mediums like ones you saved on in 1999, 2005, or even 2015 were all developed and used depending
-            on what was affordable and available at the time, not necessarily by what would last the longest.
-          </p>
-          <p>
-            Here is a breakdown of the four main types of data storage and what happens to your files over time.
-          </p>
-        </div>
+        <p>
+          There are many types of data storage available, but not all storage is created equal. Older storage
+          mediums like ones you saved on in 1999, 2005, or even 2015 were all developed and used depending
+          on what was affordable and available at the time, not necessarily by what would last the longest.
+        </p>
+        <p>
+          Here is a breakdown of the four main types of data storage and what happens to your files over time.
+        </p>
 
         <p class="click-hint">Click each type to learn more.</p>
 
@@ -841,10 +846,9 @@
           <!-- OPTICAL -->
           <article class="storage-card optical" role="listitem">
             <div class="card-header">
-              <p class="card-type">Optical</p>
               <h3 class="card-name">OPTICAL</h3>
             </div>
-            <div class="card-image-placeholder" role="img" aria-label="Image placeholder for optical storage — suggested: photograph of CDs or DVDs">
+            <div class="card-image-placeholder" role="img" aria-label="Image placeholder — suggested: photograph of CDs or DVDs">
               <span class="placeholder-label">[ IMAGE ]</span>
               <span>Suggested: CDs or DVDs</span>
             </div>
@@ -877,10 +881,9 @@
           <!-- MAGNETIC -->
           <article class="storage-card magnetic" role="listitem">
             <div class="card-header">
-              <p class="card-type">Magnetic</p>
               <h3 class="card-name">MAGNETIC</h3>
             </div>
-            <div class="card-image-placeholder" role="img" aria-label="Image placeholder for magnetic storage — suggested: hard drive or VHS tape">
+            <div class="card-image-placeholder" role="img" aria-label="Image placeholder — suggested: hard drive or VHS tape">
               <span class="placeholder-label">[ IMAGE ]</span>
               <span>Suggested: hard drive or VHS tape</span>
             </div>
@@ -913,10 +916,9 @@
           <!-- FLASH -->
           <article class="storage-card flash" role="listitem">
             <div class="card-header">
-              <p class="card-type">Flash / Solid state</p>
               <h3 class="card-name">FLASH / SOLID STATE</h3>
             </div>
-            <div class="card-image-placeholder" role="img" aria-label="Image placeholder for flash storage — suggested: USB drive or SD card">
+            <div class="card-image-placeholder" role="img" aria-label="Image placeholder — suggested: USB drive or SD card">
               <span class="placeholder-label">[ IMAGE ]</span>
               <span>Suggested: USB drive or SD card</span>
             </div>
@@ -945,10 +947,9 @@
           <!-- CLOUD -->
           <article class="storage-card cloud" role="listitem">
             <div class="card-header">
-              <p class="card-type">Cloud / Network</p>
               <h3 class="card-name">CLOUD / NETWORK</h3>
             </div>
-            <div class="card-image-placeholder" role="img" aria-label="Image placeholder for cloud storage — suggested: cloud icon or network graphic">
+            <div class="card-image-placeholder" role="img" aria-label="Image placeholder — suggested: cloud or network graphic">
               <span class="placeholder-label">[ IMAGE ]</span>
               <span>Suggested: cloud or network graphic</span>
             </div>
@@ -986,7 +987,6 @@
       <div class="container">
         <p class="section-label" aria-hidden="true">02 / Format obsolescence</p>
         <h2 id="obsolescence-heading">Disc survival is only half the battle</h2>
-        <p class="section-subtitle">Why having the disc is not enough</p>
 
         <p>
           You have a mint condition floppy disk from 1989 that you stored in a climate-controlled dark room,
@@ -1006,8 +1006,8 @@
 
         <!-- TIMELINE -->
         <div style="margin-top: 3rem;" aria-labelledby="timeline-heading">
-          <h3 id="timeline-heading">Format obsolescence timeline</h3>
-          <p style="font-size: 0.875rem; color: var(--text-soft); margin-bottom: 0; font-family: var(--font-body); font-style: italic;">Selected storage formats and their likely usability lifespans.</p>
+          <h3 class="timeline-section-heading" id="timeline-heading">Format obsolescence timeline</h3>
+          <p style="font-size: 0.875rem; color: var(--text-soft); margin-bottom: 0; font-family: var(--font-body); font-style: italic; margin-top: 0.25rem;">Selected storage formats and their likely usability lifespans.</p>
 
           <div class="timeline" role="list" aria-label="Timeline of storage format obsolescence">
 
@@ -1185,11 +1185,8 @@
   <script>
     (function () {
       const FONT_CLASSES = ['font-y2k', 'font-readable', 'font-accessible'];
-      const SIZE_CLASSES = ['size-regular', 'size-large', 'size-largest'];
       const body = document.body;
-
       const fontBtns = document.querySelectorAll('[data-font]');
-      const sizeBtns = document.querySelectorAll('[data-size]');
 
       function setFont(target) {
         FONT_CLASSES.forEach(c => body.classList.remove(c));
@@ -1202,34 +1199,20 @@
         try { localStorage.setItem('imds-font', target); } catch(e) {}
       }
 
-      function setSize(target) {
-        SIZE_CLASSES.forEach(c => body.classList.remove(c));
-        if (target !== 'size-regular') body.classList.add(target);
-        sizeBtns.forEach(b => {
-          const active = b.dataset.size === target;
-          b.classList.toggle('active', active);
-          b.setAttribute('aria-pressed', active ? 'true' : 'false');
-        });
-        try { localStorage.setItem('imds-size', target); } catch(e) {}
-      }
-
       try {
         const savedFont = localStorage.getItem('imds-font');
         if (savedFont && FONT_CLASSES.includes(savedFont)) setFont(savedFont);
-        const savedSize = localStorage.getItem('imds-size');
-        if (savedSize && SIZE_CLASSES.includes(savedSize)) setSize(savedSize);
       } catch(e) {}
 
       fontBtns.forEach(btn => btn.addEventListener('click', () => setFont(btn.dataset.font)));
-      sizeBtns.forEach(btn => btn.addEventListener('click', () => setSize(btn.dataset.size)));
 
       // Collapsible cards
       document.querySelectorAll('.card-toggle').forEach(toggle => {
         toggle.addEventListener('click', function() {
           const expanded = this.getAttribute('aria-expanded') === 'true';
           this.setAttribute('aria-expanded', !expanded);
-          const body = document.getElementById(this.getAttribute('aria-controls'));
-          body.classList.toggle('open', !expanded);
+          const cardBody = document.getElementById(this.getAttribute('aria-controls'));
+          cardBody.classList.toggle('open', !expanded);
           this.querySelector('.toggle-arrow').style.transform = !expanded ? 'rotate(180deg)' : '';
         });
       });

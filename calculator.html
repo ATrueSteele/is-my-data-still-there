@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Lifespan Calculator | Is My Data Still There?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #F5F5F0;
+      --surface:      #FFFFFF;
+      --text:         #111118;
+      --text-mid:     #3A3A44;
+      --text-soft:    #606068;
+      --cyan:         #0077AA;
+      --cyan-light:   #E0F4FF;
+      --lime:         #3D7A00;
+      --lime-light:   #EFFFCC;
+      --danger:       #CC0022;
+      --danger-light: #FFE8EB;
+      --warn:         #AA6600;
+      --warn-light:   #FFF4CC;
+      --border:       #CCCCCC;
+      --border-strong:#777777;
+      --accent-bar:   #0099CC;
+      --font-display: 'Orbitron', sans-serif;
+      --font-body:    'IBM Plex Mono', monospace;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 17px;
+      line-height: 1.8;
+      font-weight: 600;
+      padding: 2rem;
+    }
+
+    .calc-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* ── FORM ── */
+    .calc-form {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      border-top: 4px solid var(--accent-bar);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    label .label-hint {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-soft);
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 400;
+      margin-top: 0.1rem;
+    }
+
+    select,
+    input[type="number"] {
+      width: 100%;
+      padding: 0.65rem 0.9rem;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+      background: var(--bg);
+      border: 1px solid var(--border-strong);
+      border-radius: 4px;
+      appearance: none;
+      -webkit-appearance: none;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%230077AA' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.9rem center;
+      padding-right: 2.5rem;
+    }
+
+    select:focus,
+    input[type="number"]:focus {
+      outline: 3px solid var(--cyan);
+      outline-offset: 2px;
+      border-color: var(--cyan);
+      background: var(--surface);
+    }
+
+    select:hover,
+    input[type="number"]:hover {
+      border-color: var(--cyan);
+      background: var(--surface);
+    }
+
+    .calc-btn {
+      width: 100%;
+      margin-top: 1.75rem;
+      padding: 0.85rem 1.5rem;
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #fff;
+      background: var(--cyan);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .calc-btn:hover { background: #005F8A; }
+    .calc-btn:active { transform: scale(0.98); }
+    .calc-btn:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+
+    /* ── RESULT PANEL ── */
+    .result-panel {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .result-panel.visible { display: block; }
+
+    .result-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .result-status-label {
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .result-status {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    /* Status color variants */
+    .status-ok    .result-status-label { color: var(--lime); }
+    .status-ok    .result-status        { color: var(--lime); }
+    .status-ok                          { border-top: 4px solid var(--lime); }
+
+    .status-warn  .result-status-label { color: var(--warn); }
+    .status-warn  .result-status        { color: var(--warn); }
+    .status-warn                        { border-top: 4px solid var(--warn); }
+
+    .status-critical .result-status-label { color: var(--danger); }
+    .status-critical .result-status        { color: var(--danger); }
+    .status-critical                       { border-top: 4px solid var(--danger); }
+
+    .result-body {
+      padding: 1.25rem 1.5rem;
+    }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.88rem;
+    }
+
+    .result-row:last-of-type { border-bottom: none; }
+
+    .result-row-label {
+      color: var(--text-soft);
+      font-size: 0.78rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    .result-row-value {
+      color: var(--text);
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .result-message {
+      margin-top: 1.25rem;
+      padding: 1rem 1.25rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    .result-message.ok       { background: var(--lime-light); color: #1A3A00; border-left: 3px solid var(--lime); }
+    .result-message.warn     { background: var(--warn-light);  color: #4A2A00; border-left: 3px solid var(--warn); }
+    .result-message.critical { background: var(--danger-light); color: #4A0010; border-left: 3px solid var(--danger); }
+
+    .result-alternatives {
+      margin-top: 1.25rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .result-alternatives-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+    }
+
+    .alt-list {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .alt-list li {
+      background: var(--cyan-light);
+      color: #004466;
+      border: 1px solid var(--cyan);
+      border-radius: 3px;
+      padding: 0.25rem 0.65rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .reset-btn {
+      width: 100%;
+      margin-top: 1rem;
+      padding: 0.6rem;
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      color: var(--text-soft);
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .reset-btn:hover { background: var(--bg); color: var(--text); }
+    .reset-btn:focus-visible { outline: 3px solid var(--cyan); outline-offset: 2px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 480px) {
+      body { padding: 1rem; }
+      .calc-form { padding: 1.25rem; }
+      .result-row { flex-direction: column; gap: 0.1rem; }
+      .result-row-value { text-align: left; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .calc-btn { transition: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="calc-wrap">
+
+  <form class="calc-form" id="calc-form" novalidate>
+
+    <div class="form-group">
+      <label for="storage-type">
+        Storage type
+        <span class="label-hint">What kind of device or media was your data saved on?</span>
+      </label>
+      <select id="storage-type" required>
+        <option value="" disabled selected>Select a storage type...</option>
+        <optgroup label="Optical">
+          <option value="cd-rom">CD-ROM (factory pressed, read-only)</option>
+          <option value="cd-r">CD-R (burned at home, write-once)</option>
+          <option value="cd-rw">CD-RW (burned at home, rewritable)</option>
+          <option value="dvd-r">DVD-R (burned at home, write-once)</option>
+          <option value="dvd-rw">DVD-RW (burned at home, rewritable)</option>
+          <option value="dvd-rom">DVD-ROM (factory pressed, read-only)</option>
+          <option value="blu-ray">Blu-ray disc</option>
+        </optgroup>
+        <optgroup label="Magnetic">
+          <option value="hdd">Hard disk drive (HDD)</option>
+          <option value="floppy-35">3.5-inch floppy disk</option>
+          <option value="floppy-525">5.25-inch floppy disk</option>
+          <option value="floppy-8">8-inch floppy disk</option>
+          <option value="zip">Zip disk</option>
+          <option value="vhs">VHS tape</option>
+          <option value="betamax">Betamax tape</option>
+          <option value="cassette">Cassette tape</option>
+          <option value="minidv">MiniDV tape</option>
+        </optgroup>
+        <optgroup label="Flash / Solid State">
+          <option value="usb">USB flash drive</option>
+          <option value="ssd">Solid state drive (SSD)</option>
+          <option value="sd-card">SD / microSD card</option>
+        </optgroup>
+        <optgroup label="Cloud / Network">
+          <option value="cloud">Cloud storage (Google Drive, iCloud, Dropbox, etc.)</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="save-year">
+        Approximate year saved
+        <span class="label-hint">When was this data last saved or transferred to this medium?</span>
+      </label>
+      <input
+        type="number"
+        id="save-year"
+        min="1970"
+        max="2026"
+        placeholder="e.g. 1998"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="conditions">
+        Storage conditions
+        <span class="label-hint">How has this media been stored over the years?</span>
+      </label>
+      <select id="conditions" required>
+        <option value="" disabled selected>Select storage conditions...</option>
+        <option value="ideal">Ideal (climate controlled, in a case)</option>
+        <option value="average">Average (room temperature, stored carefully)</option>
+        <option value="drawer">In a drawer somewhere</option>
+        <option value="poor">Poor (hot, damp, or exposed)</option>
+        <option value="unknown">I don't know</option>
+      </select>
+    </div>
+
+    <button type="submit" class="calc-btn">Check my data</button>
+
+  </form>
+
+  <!-- RESULT PANEL -->
+  <div class="result-panel" id="result-panel" role="region" aria-live="polite" aria-label="Calculator result">
+
+    <div class="result-header" id="result-header">
+      <p class="result-status-label" id="result-status-label">Status</p>
+      <p class="result-status" id="result-status"></p>
+    </div>
+
+    <div class="result-body">
+      <div class="result-row">
+        <span class="result-row-label">Storage type</span>
+        <span class="result-row-value" id="result-type"></span>
+      </div>
+      <div class="result-row">
+        <span class="result-row-label">Year saved</span>
+        <span class="result-row-value" id="result-year"></span>
+      </div>
+      <div class="result-row">
+        <span class="result-row-label">Storage conditions</span>
+        <span class="result-row-value" id="result-conditions"></span>
+      </div>
+      <div class="result-row">
+        <span class="result-row-label">Base lifespan</span>
+        <span class="result-row-value" id="result-base-lifespan"></span>
+      </div>
+      <div class="result-row">
+        <span class="result-row-label">Estimated safe lifespan ends</span>
+        <span class="result-row-value" id="result-end-date"></span>
+      </div>
+      <div class="result-row">
+        <span class="result-row-label">Years remaining</span>
+        <span class="result-row-value" id="result-years-remaining"></span>
+      </div>
+
+      <div class="result-message" id="result-message"></div>
+
+      <div class="result-alternatives" id="result-alternatives">
+        <p class="result-alternatives-label">Recommended backup alternatives</p>
+        <ul class="alt-list" id="alt-list"></ul>
+      </div>
+    </div>
+
+    <div style="padding: 0 1.5rem 1.5rem;">
+      <button class="reset-btn" id="reset-btn">Check another device</button>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+(function () {
+
+  const CURRENT_YEAR = 2026;
+
+  // Base lifespans in years
+  const MEDIA = {
+    'cd-rom':    { name: 'CD-ROM (pressed)',       base: 100, alts: ['Cloud storage', 'External SSD', 'USB flash drive'] },
+    'cd-r':      { name: 'CD-R (burned)',           base: 50,  alts: ['Cloud storage', 'External SSD', 'USB flash drive'] },
+    'cd-rw':     { name: 'CD-RW (rewritable)',      base: 30,  alts: ['Cloud storage', 'External SSD', 'USB flash drive'] },
+    'dvd-r':     { name: 'DVD-R (burned)',          base: 50,  alts: ['Cloud storage', 'External SSD', 'USB flash drive'] },
+    'dvd-rw':    { name: 'DVD-RW (rewritable)',     base: 30,  alts: ['Cloud storage', 'External SSD', 'USB flash drive'] },
+    'dvd-rom':   { name: 'DVD-ROM (pressed)',       base: 100, alts: ['Cloud storage', 'External SSD', 'USB flash drive'] },
+    'blu-ray':   { name: 'Blu-ray disc',            base: 50,  alts: ['Cloud storage', 'External SSD'] },
+    'hdd':       { name: 'Hard disk drive (HDD)',   base: 10,  alts: ['Cloud storage', 'External SSD', 'USB flash drive'] },
+    'floppy-35': { name: '3.5-inch floppy disk',   base: 10,  alts: ['Cloud storage', 'External SSD', 'USB flash drive'] },
+    'floppy-525':{ name: '5.25-inch floppy disk',  base: 10,  alts: ['Cloud storage', 'External SSD'] },
+    'floppy-8':  { name: '8-inch floppy disk',     base: 10,  alts: ['Cloud storage', 'External SSD'] },
+    'zip':       { name: 'Zip disk',                base: 10,  alts: ['Cloud storage', 'External SSD', 'USB flash drive'] },
+    'vhs':       { name: 'VHS tape',               base: 20,  alts: ['Cloud storage', 'External SSD', 'DVD-R (archival)'] },
+    'betamax':   { name: 'Betamax tape',           base: 20,  alts: ['Cloud storage', 'External SSD'] },
+    'cassette':  { name: 'Cassette tape',          base: 15,  alts: ['Cloud storage', 'External SSD'] },
+    'minidv':    { name: 'MiniDV tape',            base: 15,  alts: ['Cloud storage', 'External SSD'] },
+    'usb':       { name: 'USB flash drive',        base: 10,  alts: ['Cloud storage', 'External SSD'] },
+    'ssd':       { name: 'Solid state drive (SSD)',base: 10,  alts: ['Cloud storage', 'External HDD (backup)'] },
+    'sd-card':   { name: 'SD / microSD card',      base: 10,  alts: ['Cloud storage', 'External SSD', 'USB flash drive'] },
+    'cloud':     { name: 'Cloud storage',          base: 999, alts: ['External SSD (local backup)', 'USB flash drive (local backup)'] },
+  };
+
+  // Condition multipliers
+  const CONDITIONS = {
+    ideal:   { label: 'Ideal (climate controlled)',    multiplier: 1.0 },
+    average: { label: 'Average (room temperature)',    multiplier: 0.8 },
+    drawer:  { label: 'In a drawer somewhere',         multiplier: 0.6 },
+    poor:    { label: 'Poor (hot, damp, or exposed)',  multiplier: 0.4 },
+    unknown: { label: 'Unknown',                       multiplier: 0.75 },
+  };
+
+  const form       = document.getElementById('calc-form');
+  const panel      = document.getElementById('result-panel');
+  const resetBtn   = document.getElementById('reset-btn');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const typeVal  = document.getElementById('storage-type').value;
+    const yearVal  = parseInt(document.getElementById('save-year').value, 10);
+    const condVal  = document.getElementById('conditions').value;
+
+    // Basic validation
+    if (!typeVal || !yearVal || !condVal) return;
+    if (yearVal < 1970 || yearVal > CURRENT_YEAR) {
+      alert('Please enter a year between 1970 and ' + CURRENT_YEAR + '.');
+      return;
+    }
+
+    const media    = MEDIA[typeVal];
+    const cond     = CONDITIONS[condVal];
+    const adjusted = Math.round(media.base * cond.multiplier);
+    const endYear  = yearVal + adjusted;
+    const remaining = endYear - CURRENT_YEAR;
+
+    // Determine status
+    let statusClass, statusLabel, statusText, message;
+
+    if (typeVal === 'cloud') {
+      statusClass = 'status-ok';
+      statusLabel = '✅ Likely intact';
+      statusText  = 'Cloud storage is ongoing';
+      message     = 'Cloud storage is currently the most reliable option for data preservation — as long as your account remains active and the service continues to operate. Remember: even cloud storage should have a local backup. Consider keeping a copy on an external SSD as a failsafe.';
+    } else if (remaining > 10) {
+      statusClass = 'status-ok';
+      statusLabel = '✅ Likely intact';
+      statusText  = 'Your data appears to be within its safe lifespan.';
+      message     = 'Based on the information you provided, your data is likely still accessible — but don\'t wait too long. Backing up now while the hardware to read it still exists is always the safer choice.';
+    } else if (remaining > 0) {
+      statusClass = 'status-warn';
+      statusLabel = '⚠ At risk';
+      statusText  = 'Your data is approaching the end of its safe lifespan.';
+      message     = 'You are within 10 years of the estimated end of this medium\'s safe lifespan. The window to act is narrowing. Back up your data to a current format as soon as possible.';
+    } else {
+      statusClass = 'status-critical';
+      statusLabel = '🚨 Critical';
+      statusText  = 'Your data may already be lost or unreadable.';
+      message     = 'Based on the information you provided, this medium has likely passed its estimated safe lifespan. Your data may still be recoverable — but time is critical. Try accessing it now while the hardware still exists, and transfer it to a current format immediately.';
+    }
+
+    // Populate result panel
+    const header = document.getElementById('result-header');
+    header.className = 'result-header ' + statusClass;
+
+    document.getElementById('result-status-label').textContent = statusLabel;
+    document.getElementById('result-status').textContent = statusText;
+    document.getElementById('result-type').textContent = media.name;
+    document.getElementById('result-year').textContent = yearVal;
+    document.getElementById('result-conditions').textContent = cond.label;
+    document.getElementById('result-base-lifespan').textContent = media.base === 999 ? 'Ongoing (service dependent)' : media.base + ' years (under ideal conditions)';
+
+    if (typeVal === 'cloud') {
+      document.getElementById('result-end-date').textContent = 'Ongoing while account is active';
+      document.getElementById('result-years-remaining').textContent = 'N/A';
+    } else {
+      document.getElementById('result-end-date').textContent = 'Estimated safe lifespan ends in ' + endYear + (remaining < 0 ? ' — your data may already be at risk.' : '.');
+      document.getElementById('result-years-remaining').textContent = remaining < 0
+        ? Math.abs(remaining) + ' years past estimated safe lifespan'
+        : remaining + ' years';
+    }
+
+    const msgEl = document.getElementById('result-message');
+    msgEl.textContent = message;
+    msgEl.className = 'result-message ' + (statusClass === 'status-ok' ? 'ok' : statusClass === 'status-warn' ? 'warn' : 'critical');
+
+    // Alternatives
+    const altList = document.getElementById('alt-list');
+    altList.innerHTML = '';
+    media.alts.forEach(alt => {
+      const li = document.createElement('li');
+      li.textContent = alt;
+      altList.appendChild(li);
+    });
+
+    panel.classList.add('visible');
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  resetBtn.addEventListener('click', function () {
+    panel.classList.remove('visible');
+    form.reset();
+    document.getElementById('storage-type').value = '';
+    document.getElementById('conditions').value = '';
+    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Is My Data Still There? | A Digital Storage Resource</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #F5F5F0;
+      --surface:      #FFFFFF;
+      --text:         #111118;
+      --text-mid:     #3A3A44;
+      --text-soft:    #606068;
+      --cyan:         #0077AA;
+      --cyan-light:   #E0F4FF;
+      --lime:         #3D7A00;
+      --lime-light:   #EFFFCC;
+      --purple:       #5500AA;
+      --purple-light: #F0E8FF;
+      --orange:       #AA4400;
+      --orange-light: #FFF0E0;
+      --danger:       #CC0022;
+      --danger-light: #FFE8EB;
+      --border:       #CCCCCC;
+      --border-strong:#777777;
+      --accent-bar:   #0099CC;
+
+      --font-display:         'Orbitron', sans-serif;
+      --font-body:            'IBM Plex Mono', monospace;
+      --font-weight-display:  900;
+      --font-weight-body:     600;
+      --font-size-body:       17px;
+      --font-size-nav:        0.8rem;
+      --font-size-card:       0.9rem;
+      --line-height-body:     1.8;
+    }
+
+    body.font-readable {
+      --font-display:         'Inter', sans-serif;
+      --font-body:            'Inter', sans-serif;
+      --font-weight-display:  700;
+      --font-weight-body:     400;
+      --font-size-body:       17px;
+      --font-size-nav:        0.85rem;
+      --font-size-card:       0.95rem;
+      --line-height-body:     1.75;
+    }
+
+    body.font-accessible {
+      --font-display:         'Atkinson Hyperlegible', sans-serif;
+      --font-body:            'Atkinson Hyperlegible', sans-serif;
+      --font-weight-display:  700;
+      --font-weight-body:     400;
+      --font-size-body:       20px;
+      --font-size-nav:        0.95rem;
+      --font-size-card:       1rem;
+      --line-height-body:     1.9;
+    }
+
+    body.size-large {
+      --font-size-body: calc(var(--font-size-body) + 2px);
+    }
+
+    body.size-largest {
+      --font-size-body: calc(var(--font-size-body) + 4px);
+    }
+
+    /* ── SKIP LINK ── */
+    .skip-link {
+      position: absolute;
+      top: -999px;
+      left: 1rem;
+      background: var(--cyan);
+      color: #fff;
+      padding: 0.5rem 1rem;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      border-radius: 0 0 4px 4px;
+      z-index: 9999;
+      text-decoration: none;
+    }
+    .skip-link:focus { top: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: var(--font-weight-body);
+      font-size: var(--font-size-body);
+      line-height: var(--line-height-body);
+      transition: font-size 0.2s;
+    }
+
+    /* ── ACCESSIBILITY BAR ── */
+    .a11y-bar {
+      background: #EEEEE8;
+      border-bottom: 1px solid var(--border);
+      padding: 0.6rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .a11y-note {
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      color: var(--text-soft);
+    }
+
+    .a11y-note strong { color: var(--text-mid); font-weight: 600; }
+
+    .a11y-controls {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .a11y-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .a11y-group-label {
+      font-family: var(--font-body);
+      font-size: 0.72rem;
+      color: var(--text-soft);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+
+    .a11y-btn {
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      padding: 0.25rem 0.7rem;
+      border: 1px solid var(--border-strong);
+      border-radius: 3px;
+      background: var(--surface);
+      color: var(--text-mid);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+
+    .a11y-btn:hover {
+      background: var(--cyan-light);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    .a11y-btn.active {
+      background: var(--cyan);
+      border-color: var(--cyan);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .a11y-btn:focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 2px;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--surface);
+      border-bottom: 3px solid var(--accent-bar);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .site-logo {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: var(--font-weight-display);
+      letter-spacing: 0.06em;
+      color: var(--cyan);
+      text-decoration: none;
+    }
+
+    nav[aria-label="Main navigation"] ul {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+      flex-wrap: wrap;
+    }
+
+    nav[aria-label="Main navigation"] a {
+      font-family: var(--font-body);
+      color: var(--text-mid);
+      text-decoration: none;
+      font-size: var(--font-size-nav);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.2rem 0;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    nav[aria-label="Main navigation"] a:hover,
+    nav[aria-label="Main navigation"] a:focus {
+      color: var(--cyan);
+      border-bottom-color: var(--cyan);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 4rem 2rem 3.5rem;
+      text-align: center;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 1.25rem;
+      font-weight: 600;
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 6vw, 4rem);
+      font-weight: var(--font-weight-display);
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+    }
+
+    /* ── HERO IMAGE PLACEHOLDER ── */
+    .hero-image-placeholder {
+      width: 100%;
+      max-width: 700px;
+      height: 220px;
+      margin: 0 auto 1.5rem;
+      background: var(--bg);
+      border: 2px dashed var(--border-strong);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 0.5rem;
+      color: var(--text-soft);
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+    }
+
+    .hero-image-placeholder .placeholder-label {
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--cyan);
+    }
+
+    .hero-sub {
+      max-width: 600px;
+      margin: 0 auto 1.5rem;
+      color: var(--text-mid);
+      font-size: 1rem;
+      line-height: 1.75;
+    }
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    section {
+      padding: 4rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-label {
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: var(--font-weight-display);
+      color: var(--text);
+      margin-bottom: 0.4rem;
+      line-height: 1.25;
+    }
+
+    .section-subtitle {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: var(--text-mid);
+      margin-bottom: 1.25rem;
+      font-style: italic;
+    }
+
+    h3 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: var(--font-weight-display);
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-family: var(--font-body);
+      color: var(--text-mid);
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+
+    p:last-child { margin-bottom: 0; }
+    em { font-style: italic; color: var(--text-mid); }
+    strong { font-weight: 700; color: var(--text); }
+
+    /* ── STORAGE GRID ── */
+    .storage-intro {
+      margin-bottom: 0.75rem;
+    }
+
+    .click-hint {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: var(--cyan);
+      font-style: italic;
+      margin-bottom: 1.5rem;
+    }
+
+    .storage-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    /* ── COLLAPSIBLE STORAGE CARDS ── */
+    .storage-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .storage-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+    }
+
+    .optical::before  { background: var(--cyan); }
+    .magnetic::before { background: var(--lime); }
+    .flash::before    { background: var(--purple); }
+    .cloud::before    { background: var(--orange); }
+
+    .card-header {
+      padding: 1.25rem 1.25rem 0.75rem;
+    }
+
+    .card-type {
+      font-family: var(--font-body);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .optical  .card-type { color: var(--cyan); }
+    .magnetic .card-type { color: var(--lime); }
+    .flash    .card-type { color: var(--purple); }
+    .cloud    .card-type { color: var(--orange); }
+
+    .card-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: var(--font-weight-display);
+      color: var(--text);
+      margin-bottom: 0;
+      line-height: 1.2;
+    }
+
+    /* ── CARD IMAGE PLACEHOLDER ── */
+    .card-image-placeholder {
+      width: 100%;
+      height: 100px;
+      background: var(--bg);
+      border-top: 1px dashed var(--border);
+      border-bottom: 1px dashed var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 0.3rem;
+      color: var(--text-soft);
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+    }
+
+    .card-image-placeholder .placeholder-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--cyan);
+    }
+
+    /* ── TOGGLE BUTTON ── */
+    .card-toggle {
+      width: 100%;
+      padding: 0.6rem 1.25rem;
+      background: none;
+      border: none;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      color: var(--cyan);
+      font-weight: 600;
+      text-align: left;
+      transition: background 0.15s;
+    }
+
+    .card-toggle:hover { background: var(--cyan-light); }
+    .card-toggle:focus-visible { outline: 3px solid var(--cyan); outline-offset: -3px; }
+
+    .toggle-arrow {
+      font-size: 0.7rem;
+      transition: transform 0.2s;
+      display: inline-block;
+    }
+
+    .card-toggle[aria-expanded="true"] .toggle-arrow {
+      transform: rotate(180deg);
+    }
+
+    /* ── CARD BODY (collapsible) ── */
+    .card-body {
+      display: none;
+      padding: 1rem 1.25rem 1.25rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .card-body.open { display: block; }
+
+    .lifespan-block {
+      margin-bottom: 0.85rem;
+    }
+
+    .lifespan-main {
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.2rem;
+    }
+
+    .lifespan-detail {
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      color: var(--text-mid);
+      padding-left: 0.75rem;
+      border-left: 2px solid var(--border);
+      margin-bottom: 0.15rem;
+      line-height: 1.5;
+    }
+
+    .card-desc {
+      font-family: var(--font-body);
+      font-size: var(--font-size-card);
+      color: var(--text-mid);
+      line-height: 1.7;
+      margin-bottom: 0.75rem;
+    }
+
+    .card-note {
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      color: var(--text-soft);
+      font-style: italic;
+    }
+
+    /* ── CALLOUT ── */
+    .callout {
+      background: var(--danger-light);
+      border: 1px solid var(--danger);
+      border-left: 4px solid var(--danger);
+      border-radius: 0 4px 4px 0;
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .callout-label {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--danger);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .callout p {
+      color: var(--text);
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .callout p:last-child { margin-bottom: 0; }
+
+    /* ── TIMELINE ── */
+    .timeline {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 5rem 1.5rem 1fr;
+      gap: 0 0.75rem;
+    }
+
+    .tl-year {
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      font-weight: var(--font-weight-display);
+      color: var(--cyan);
+      text-align: right;
+      padding-top: 0.9rem;
+    }
+
+    .tl-spine {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .tl-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--cyan);
+      margin-top: 1rem;
+      flex-shrink: 0;
+      border: 2px solid var(--surface);
+      box-shadow: 0 0 0 1px var(--cyan);
+    }
+
+    .tl-dot.now { background: var(--lime); box-shadow: 0 0 0 1px var(--lime); }
+
+    .tl-line { width: 2px; background: var(--border); flex: 1; }
+    .timeline-item:last-child .tl-line { display: none; }
+
+    .tl-content { padding: 0.7rem 0 1.25rem; }
+
+    .tl-format {
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.15rem;
+    }
+
+    .tl-format.now { color: var(--lime); }
+
+    .tl-note {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: var(--text-soft);
+      line-height: 1.6;
+    }
+
+    /* ── 3-2-1 ── */
+    .rule-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .rule-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.5rem;
+    }
+
+    .rule-number {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: var(--font-weight-display);
+      color: var(--cyan);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .rule-title {
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+
+    .rule-desc {
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      color: var(--text-mid);
+      line-height: 1.65;
+    }
+
+    /* ── CALCULATOR PLACEHOLDER ── */
+    .calc-placeholder {
+      background: var(--surface);
+      border: 2px dashed var(--border-strong);
+      border-radius: 4px;
+      padding: 3rem 2rem;
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .calc-placeholder-label {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      color: var(--cyan);
+      margin-bottom: 0.75rem;
+    }
+
+    .calc-placeholder p {
+      font-family: var(--font-body);
+      color: var(--text-soft);
+      font-size: 0.9rem;
+    }
+
+    .blink { animation: blink 1.2s step-end infinite; color: var(--cyan); }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* ── FOCUS ── */
+    :focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--surface);
+      border-top: 3px solid var(--accent-bar);
+      padding: 3rem 2rem;
+    }
+
+    .footer-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .footer-brand {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: var(--font-weight-display);
+      color: var(--cyan);
+      letter-spacing: 0.06em;
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-note {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: var(--text-soft);
+      line-height: 1.7;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-refs h3 {
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-refs ul { list-style: none; }
+
+    .footer-refs li {
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      color: var(--text-mid);
+      margin-bottom: 0.75rem;
+      line-height: 1.65;
+      padding-left: 0.75rem;
+      border-left: 2px solid var(--border);
+    }
+
+    .footer-refs a {
+      color: var(--cyan);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .footer-refs a:hover { color: var(--purple); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      header { padding: 0.85rem 1rem; }
+      .a11y-bar { padding: 0.5rem 1rem; }
+      .container { padding: 0 1rem; }
+      .hero { padding: 2.75rem 1rem 2.25rem; }
+      .hero h1 { font-size: 1.8rem; }
+      section { padding: 2.5rem 0; }
+      .storage-grid { grid-template-columns: 1fr; }
+      .rule-grid { grid-template-columns: 1fr; }
+      .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .timeline-item { grid-template-columns: 4rem 1.25rem 1fr; }
+      .a11y-controls { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .blink { animation: none; opacity: 1; }
+      body, .toggle-arrow { transition: none; }
+    }
+
+    @media (prefers-contrast: more) {
+      :root {
+        --text: #000000;
+        --text-mid: #111111;
+        --border: #444444;
+        --cyan: #005588;
+      }
+    }
+  </style>
+</head>
+<body class="font-y2k">
+
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <!-- ACCESSIBILITY BAR -->
+  <div class="a11y-bar" role="region" aria-label="Accessibility options">
+    <p class="a11y-note"><strong>Accessibility note on font style:</strong> This site uses Y2K-era display fonts by design, but you can switch to a more readable font at any time.</p>
+    <div class="a11y-controls">
+      <div class="a11y-group" role="group" aria-label="Font style">
+        <span class="a11y-group-label">Font style:</span>
+        <button class="a11y-btn active" data-font="font-y2k" aria-pressed="true">Y2K (as designed)</button>
+        <button class="a11y-btn" data-font="font-readable" aria-pressed="false">Readable (clearer text)</button>
+        <button class="a11y-btn" data-font="font-accessible" aria-pressed="false">High legibility (largest text)</button>
+      </div>
+      <div class="a11y-group" role="group" aria-label="Text size">
+        <span class="a11y-group-label">Text size adjustment:</span>
+        <button class="a11y-btn active" data-size="size-regular" aria-pressed="true">Regular</button>
+        <button class="a11y-btn" data-size="size-large" aria-pressed="false">Large</button>
+        <button class="a11y-btn" data-size="size-largest" aria-pressed="false">Largest</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <a href="#" class="site-logo" aria-label="Is My Data Still There? — return to top">IS MY DATA STILL THERE?</a>
+    <nav aria-label="Main navigation">
+      <ul>
+        <li><a href="#storage-types">Storage Types</a></li>
+        <li><a href="#obsolescence">Obsolescence</a></li>
+        <li><a href="#calculator">Calculator</a></li>
+        <li><a href="#what-to-do">What To Do</a></li>
+        <li><a href="#sources">Sources</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main-content">
+
+    <!-- HERO -->
+    <div class="hero" role="banner">
+      <p class="hero-eyebrow" aria-hidden="true">// A public information resource //</p>
+      <h1>IS MY DATA STILL THERE?</h1>
+
+      <!-- HERO IMAGE PLACEHOLDER -->
+      <div class="hero-image-placeholder" role="img" aria-label="Hero image placeholder — suggested: collage of old storage media (CDs, floppy disks, VHS tapes, Zip disks)">
+        <span class="placeholder-label">[ HERO IMAGE ]</span>
+        <span>Suggested: collage of old storage media</span>
+        <span>Replace with Canva export — recommended size: 1200 x 440px</span>
+      </div>
+
+      <p class="hero-sub">
+        Every storage medium has a lifespan and yours might have already reached its end.
+        Whether it is a box of burned CDs in a closet or a hard drive stored in a library from 2008,
+        that data may no longer be accessible.
+      </p>
+    </div>
+
+    <!-- 01 STORAGE TYPES -->
+    <section id="storage-types" aria-labelledby="storage-heading">
+      <div class="container">
+        <p class="section-label" aria-hidden="true">01 / Storage types</p>
+        <h2 id="storage-heading">How data is stored and what degrades it</h2>
+
+        <div class="storage-intro">
+          <p>
+            There are many types of data storage available, but not all storage is created equal. Older storage
+            mediums like ones you saved on in 1999, 2005, or even 2015 were all developed and used depending
+            on what was affordable and available at the time, not necessarily by what would last the longest.
+          </p>
+          <p>
+            Here is a breakdown of the four main types of data storage and what happens to your files over time.
+          </p>
+        </div>
+
+        <p class="click-hint">Click each type to learn more.</p>
+
+        <div class="storage-grid" role="list" aria-label="Storage type cards">
+
+          <!-- OPTICAL -->
+          <article class="storage-card optical" role="listitem">
+            <div class="card-header">
+              <p class="card-type">Optical</p>
+              <h3 class="card-name">OPTICAL</h3>
+            </div>
+            <div class="card-image-placeholder" role="img" aria-label="Image placeholder for optical storage — suggested: photograph of CDs or DVDs">
+              <span class="placeholder-label">[ IMAGE ]</span>
+              <span>Suggested: CDs or DVDs</span>
+            </div>
+            <button class="card-toggle" aria-expanded="false" aria-controls="optical-body">
+              <span>Learn more</span>
+              <span class="toggle-arrow" aria-hidden="true">▼</span>
+            </button>
+            <div class="card-body" id="optical-body">
+              <div class="lifespan-block">
+                <p class="lifespan-main">Examples: CDs, DVDs, Blu-ray</p>
+                <p class="lifespan-main">Lifespan: 30–100 years, which varies by disc type</p>
+                <p class="lifespan-detail">ROM/R — Up to 100 years</p>
+                <p class="lifespan-detail">RW — Up to 30 years</p>
+              </div>
+              <p class="card-desc">
+                Each disc surface contains microscopic light and dark spots that are read by a laser in a disc
+                drive. There are different types of discs: factory-pressed ROM (read-only memory) discs,
+                CD-R and DVD-R discs you could burn on your own but not edit once burned, and CD-RWs that
+                you could burn at home and re-write as needed.
+              </p>
+              <p class="card-desc">
+                All optical media storage types are sensitive to scratches, humidity, and UV light. For example,
+                the optimal 100 year lifespan listed above for ROM discs only applies to those kept in ideal
+                storage conditions: climate controlled environments that are protected from physical damage
+                and UV light exposure.
+              </p>
+            </div>
+          </article>
+
+          <!-- MAGNETIC -->
+          <article class="storage-card magnetic" role="listitem">
+            <div class="card-header">
+              <p class="card-type">Magnetic</p>
+              <h3 class="card-name">MAGNETIC</h3>
+            </div>
+            <div class="card-image-placeholder" role="img" aria-label="Image placeholder for magnetic storage — suggested: hard drive or VHS tape">
+              <span class="placeholder-label">[ IMAGE ]</span>
+              <span>Suggested: hard drive or VHS tape</span>
+            </div>
+            <button class="card-toggle" aria-expanded="false" aria-controls="magnetic-body">
+              <span>Learn more</span>
+              <span class="toggle-arrow" aria-hidden="true">▼</span>
+            </button>
+            <div class="card-body" id="magnetic-body">
+              <div class="lifespan-block">
+                <p class="lifespan-main">Examples: Hard drives, floppy disks, VHS tapes, cassette tapes</p>
+                <p class="lifespan-main">Lifespan: 3–30 years</p>
+              </div>
+              <p class="card-desc">
+                Magnetic storage works through data represented by microscopic magnetized particles on a disk
+                or tape surface. Hard disk drives use spinning platters with read-write heads that hover just
+                above the surface. If that head makes contact with the platter, data can be permanently lost.
+              </p>
+              <p class="card-desc">
+                Experts estimate the lifespan of magnetic media at around three years, recommending you
+                recopy data every two years to keep it safe.
+              </p>
+              <p class="card-desc">
+                Magnetic storage is also vulnerable to heat, dust, mold, and magnetic fields. Additionally,
+                the hardware needed to read older magnetic formats like floppy disks is almost completely
+                gone from existence.
+              </p>
+            </div>
+          </article>
+
+          <!-- FLASH -->
+          <article class="storage-card flash" role="listitem">
+            <div class="card-header">
+              <p class="card-type">Flash / Solid state</p>
+              <h3 class="card-name">FLASH / SOLID STATE</h3>
+            </div>
+            <div class="card-image-placeholder" role="img" aria-label="Image placeholder for flash storage — suggested: USB drive or SD card">
+              <span class="placeholder-label">[ IMAGE ]</span>
+              <span>Suggested: USB drive or SD card</span>
+            </div>
+            <button class="card-toggle" aria-expanded="false" aria-controls="flash-body">
+              <span>Learn more</span>
+              <span class="toggle-arrow" aria-hidden="true">▼</span>
+            </button>
+            <div class="card-body" id="flash-body">
+              <div class="lifespan-block">
+                <p class="lifespan-main">Examples: USB drives, SSDs, SD cards</p>
+                <p class="lifespan-main">Lifespan: 5–10 years</p>
+              </div>
+              <p class="card-desc">
+                Flash or solid state storage holds data in electronic cells with no moving parts, making it
+                physically durable compared to something like a VHS or cassette tape, but even these types
+                of storage devices will not last indefinitely.
+              </p>
+              <p class="card-desc">
+                Flash storage devices left unpowered over time lose their charge, potentially causing data
+                corruption even without physical damage. They are also vulnerable to dust, debris, and
+                physical elements clogging their ports if not properly covered and stored.
+              </p>
+            </div>
+          </article>
+
+          <!-- CLOUD -->
+          <article class="storage-card cloud" role="listitem">
+            <div class="card-header">
+              <p class="card-type">Cloud / Network</p>
+              <h3 class="card-name">CLOUD / NETWORK</h3>
+            </div>
+            <div class="card-image-placeholder" role="img" aria-label="Image placeholder for cloud storage — suggested: cloud icon or network graphic">
+              <span class="placeholder-label">[ IMAGE ]</span>
+              <span>Suggested: cloud or network graphic</span>
+            </div>
+            <button class="card-toggle" aria-expanded="false" aria-controls="cloud-body">
+              <span>Learn more</span>
+              <span class="toggle-arrow" aria-hidden="true">▼</span>
+            </button>
+            <div class="card-body" id="cloud-body">
+              <div class="lifespan-block">
+                <p class="lifespan-main">Examples: Google Drive, iCloud, Dropbox</p>
+                <p class="lifespan-main">Lifespan: Ongoing*</p>
+              </div>
+              <p class="card-desc">
+                Cloud storage is a complete shift from physical storage. With cloud storage, you entrust your
+                data to an outside company's servers rather than storing it on a physical device you own.
+                This outside provider's infrastructure is the only real risk to your data over time, meaning
+                that access to your data depends entirely on that company's service remaining active and your
+                account staying in good standing.
+              </p>
+              <p class="card-desc">
+                This is currently the most reliable option for long term and ongoing data preservation, but
+                it relies heavily on variables mostly out of your control. As a failsafe, many cloud services
+                suggest hard backups, which can seem redundant.
+              </p>
+              <p class="card-note">*Only as long as the service exists and your account remains active.</p>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 FORMAT OBSOLESCENCE -->
+    <section id="obsolescence" aria-labelledby="obsolescence-heading">
+      <div class="container">
+        <p class="section-label" aria-hidden="true">02 / Format obsolescence</p>
+        <h2 id="obsolescence-heading">Disc survival is only half the battle</h2>
+        <p class="section-subtitle">Why having the disc is not enough</p>
+
+        <p>
+          You have a mint condition floppy disk from 1989 that you stored in a climate-controlled dark room,
+          but unfortunately it is still likely unreadable today. Why? Because the hardware and software needed
+          to read it has largely disappeared. This is called <em>format obsolescence</em>: when the technology
+          required to access data becomes unavailable before the data itself is lost. Sure, you could buy a
+          disk reader and an old computer from eBay, but even that is becoming harder to do because each year
+          there are fewer working examples of this hardware and scarcity drives prices. Is your 1989 mint copy
+          of "Leisure Suit Larry III" really worth a $6,000 price tag on the drive needed to play it?
+        </p>
+        <p>
+          Libraries and archives face this challenge constantly. A public library that saved scores of scans
+          of local historic newspapers onto CD-RWs in the 1990s may now be dealing with degradation, format
+          obsolescence, and a minimal supply of optical drives. The same is true for people at home with tons
+          of digital photos saved on Zip disks, MiniDVs, or even early digital camera SD memory cards.
+        </p>
+
+        <!-- TIMELINE -->
+        <div style="margin-top: 3rem;" aria-labelledby="timeline-heading">
+          <h3 id="timeline-heading">Format obsolescence timeline</h3>
+          <p style="font-size: 0.875rem; color: var(--text-soft); margin-bottom: 0; font-family: var(--font-body); font-style: italic;">Selected storage formats and their likely usability lifespans.</p>
+
+          <div class="timeline" role="list" aria-label="Timeline of storage format obsolescence">
+
+            <div class="timeline-item" role="listitem">
+              <div class="tl-year">1970s</div>
+              <div class="tl-spine" aria-hidden="true"><div class="tl-dot"></div><div class="tl-line"></div></div>
+              <div class="tl-content">
+                <p class="tl-format">8-inch floppy disk</p>
+                <p class="tl-note">Effectively unreadable today without specialized hardware. Drives are rare and expensive while surviving disks are brittle and at risk for breaking.</p>
+              </div>
+            </div>
+
+            <div class="timeline-item" role="listitem">
+              <div class="tl-year">1980s</div>
+              <div class="tl-spine" aria-hidden="true"><div class="tl-dot"></div><div class="tl-line"></div></div>
+              <div class="tl-content">
+                <p class="tl-format">5.25-inch floppy disk, Betamax, VHS</p>
+                <p class="tl-note">5.25-inch floppy disks are largely unreadable without specialized hardware. VHS and Betamax tapes are degrading rapidly while their playback hardware is also becoming scarce and expensive to source.</p>
+              </div>
+            </div>
+
+            <div class="timeline-item" role="listitem">
+              <div class="tl-year">1990s</div>
+              <div class="tl-spine" aria-hidden="true"><div class="tl-dot"></div><div class="tl-line"></div></div>
+              <div class="tl-content">
+                <p class="tl-format">3.5-inch floppy disk, Zip disk, early CD-R</p>
+                <p class="tl-note">3.5-inch disk drives have been removed from modern computers and are becoming scarce and expensive to source. Zip drives are nearly extinct. CD-Rs from this era are at high risk of dye degradation now, and CD drives are also becoming scarce and expensive to source.</p>
+              </div>
+            </div>
+
+            <div class="timeline-item" role="listitem">
+              <div class="tl-year">2000s</div>
+              <div class="tl-spine" aria-hidden="true"><div class="tl-dot"></div><div class="tl-line"></div></div>
+              <div class="tl-content">
+                <p class="tl-format">DVD-R, MiniDV, HD DVD, early flash drives</p>
+                <p class="tl-note">Home-burned DVD-Rs are approaching the limits of their expected lifespan. MiniDV camcorders are rare, while HD DVDs are already obsolete. Early flash drives from this era are also at risk especially if left unpowered.</p>
+              </div>
+            </div>
+
+            <div class="timeline-item" role="listitem">
+              <div class="tl-year">2010s</div>
+              <div class="tl-spine" aria-hidden="true"><div class="tl-dot"></div><div class="tl-line"></div></div>
+              <div class="tl-content">
+                <p class="tl-format">Optical drives, older USB-A drives, early SSDs</p>
+                <p class="tl-note">Optical drives are only a requested, expensive and almost extinct option for computers and laptops at this point. External drives are inconsistent in performance. Flash drives from this era may have charge loss issues if they have been left unpowered for years. Early SSDs from this era were a big improvement in speed over hard drives, but they are increasingly unreliable for long-term storage.</p>
+              </div>
+            </div>
+
+            <div class="timeline-item" role="listitem">
+              <div class="tl-year">Now</div>
+              <div class="tl-spine" aria-hidden="true"><div class="tl-dot now"></div><div class="tl-line"></div></div>
+              <div class="tl-content">
+                <p class="tl-format now">The time to act is now</p>
+                <p class="tl-note">Current best practice for viable storage devices: back them up in cloud storage combined with external SSD and periodic new formats. No single solution is all-encompassing.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- CALLOUT -->
+        <div class="callout" role="note" aria-label="Important — Don't Wait!">
+          <p class="callout-label">⚠ Important — Don't wait!</p>
+          <p>
+            There is no dramatic process involved with data loss. You have likely already experienced it.
+            If you still have a boombox with a CD player or a CD player in your car, try one of your burned
+            "mixtape" CD-RWs from your best friend in middle school. You know the ones. There is a very good
+            chance that nothing will read or, if you are really lucky and that CD case in your closet was a
+            fantastic storage spot, you might have access to a few snippets. Likely though, it will not play
+            and an "unreadable" message might display.
+          </p>
+          <p>
+            You also see it with flash storage and you likely already have. A flash drive that worked fine
+            in 2010 returns "unreadable" or "corrupted data" errors in 2026. By the time the problem is
+            obvious, recovery is often expensive or impossible.
+          </p>
+          <p>
+            The window to act to back up your data in a different format is now, while your data is still
+            accessible and the hardware needed to read it still exists.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 03 CALCULATOR -->
+    <section id="calculator" aria-labelledby="calc-heading">
+      <div class="container">
+        <p class="section-label" aria-hidden="true">03 / Data lifespan calculator</p>
+        <h2 id="calc-heading">See where your storage device stands</h2>
+        <p>
+          Enter what you know about your stored data — when it was saved, what it was saved on,
+          and how it has been kept — and get an estimate of whether your data is likely still intact,
+          at risk, or past its expected safe lifespan.
+        </p>
+
+        <div class="calc-placeholder" role="region" aria-label="Calculator coming soon">
+          <p class="calc-placeholder-label">[ Calculator ] <span class="blink" aria-hidden="true">_</span></p>
+          <p>The interactive data lifespan calculator will appear here.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 WHAT TO DO -->
+    <section id="what-to-do" aria-labelledby="what-heading">
+      <div class="container">
+        <p class="section-label" aria-hidden="true">04 / What should I do?</p>
+        <h2 id="what-heading">The 3-2-1 rule for data preservation</h2>
+
+        <p>
+          Information professionals and archivists frequently use the 3-2-1 backup rule as a basic standard
+          for data safety. It is simple, effective, and useful for everyone concerned about data longevity
+          to follow:
+        </p>
+
+        <div class="rule-grid" role="list" aria-label="The 3-2-1 backup rule">
+          <div class="rule-card" role="listitem">
+            <div class="rule-number" aria-hidden="true">3</div>
+            <p class="rule-title">Keep 3 copies</p>
+            <p class="rule-desc">Of any data you cannot afford to lose. One copy is not a reliable backup.</p>
+          </div>
+          <div class="rule-card" role="listitem">
+            <div class="rule-number" aria-hidden="true">2</div>
+            <p class="rule-title">On 2 different types of storage</p>
+            <p class="rule-desc">Instead of keeping all copies on the same type of storage. If they share a storage medium, they share the same risks of degradation or failure.</p>
+          </div>
+          <div class="rule-card" role="listitem">
+            <div class="rule-number" aria-hidden="true">1</div>
+            <p class="rule-title">Store offsite</p>
+            <p class="rule-desc">At least one copy of your data. This could be cloud storage, a relative's home, or a different, secure location.</p>
+          </div>
+        </div>
+
+        <p style="margin-top: 1.75rem;">
+          For physical media you already own (e.g. old CDs, VHS tapes, external hard drives, etc.), the most
+          urgent step is to transfer the data now, while the data is still able to be read by extant hardware.
+          Many public libraries offer help with digitization, accessing older media, or pointing you to local
+          resources for assistance.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER / SOURCES -->
+  <footer id="sources">
+    <div class="footer-inner">
+      <div>
+        <p class="footer-brand">IS MY DATA STILL THERE?</p>
+        <p class="footer-note">
+          A public information resource on digital storage lifespan and format obsolescence.
+          Created as a project for LIS 5268 (Technology for Information Professionals),
+          School of Information, University of South Florida.
+        </p>
+        <p class="footer-note">
+          Lifespan estimates are based on published research and manufacturer specifications
+          under typical conditions. Actual results vary widely based on media quality,
+          storage environment, and usage history.
+        </p>
+      </div>
+
+      <div class="footer-refs">
+        <h3>Sources</h3>
+        <ul>
+          <li>Byers, F. R. (2003). <em>Care and handling of CDs and DVDs: A guide for librarians and archivists.</em> Council on Library and Information Resources &amp; National Institute of Standards and Technology.</li>
+          <li>Library of Congress. (n.d.). <em>Sustainability of digital formats: Planning for Library of Congress collections.</em> <a href="https://www.loc.gov/preservation/digital/formats/" target="_blank" rel="noopener noreferrer">loc.gov/preservation/digital/formats</a></li>
+          <li>Parsons, J. J. (2023). <em>New perspectives on computer concepts: Comprehensive</em> (21st ed., pp. 116–128). Cengage Learning.</li>
+          <li>Rothenberg, J. (1995). Ensuring the longevity of digital documents. <em>Scientific American, 272</em>(1), 42–47.</li>
+          <li>Van Bogart, J. W. C. (1995). <em>Magnetic tape storage and handling: A guide for libraries and archives.</em> Commission on Preservation and Access &amp; National Media Laboratory.</li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      const FONT_CLASSES = ['font-y2k', 'font-readable', 'font-accessible'];
+      const SIZE_CLASSES = ['size-regular', 'size-large', 'size-largest'];
+      const body = document.body;
+
+      const fontBtns = document.querySelectorAll('[data-font]');
+      const sizeBtns = document.querySelectorAll('[data-size]');
+
+      function setFont(target) {
+        FONT_CLASSES.forEach(c => body.classList.remove(c));
+        body.classList.add(target);
+        fontBtns.forEach(b => {
+          const active = b.dataset.font === target;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+        try { localStorage.setItem('imds-font', target); } catch(e) {}
+      }
+
+      function setSize(target) {
+        SIZE_CLASSES.forEach(c => body.classList.remove(c));
+        if (target !== 'size-regular') body.classList.add(target);
+        sizeBtns.forEach(b => {
+          const active = b.dataset.size === target;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+        try { localStorage.setItem('imds-size', target); } catch(e) {}
+      }
+
+      try {
+        const savedFont = localStorage.getItem('imds-font');
+        if (savedFont && FONT_CLASSES.includes(savedFont)) setFont(savedFont);
+        const savedSize = localStorage.getItem('imds-size');
+        if (savedSize && SIZE_CLASSES.includes(savedSize)) setSize(savedSize);
+      } catch(e) {}
+
+      fontBtns.forEach(btn => btn.addEventListener('click', () => setFont(btn.dataset.font)));
+      sizeBtns.forEach(btn => btn.addEventListener('click', () => setSize(btn.dataset.size)));
+
+      // Collapsible cards
+      document.querySelectorAll('.card-toggle').forEach(toggle => {
+        toggle.addEventListener('click', function() {
+          const expanded = this.getAttribute('aria-expanded') === 'true';
+          this.setAttribute('aria-expanded', !expanded);
+          const body = document.getElementById(this.getAttribute('aria-controls'));
+          body.classList.toggle('open', !expanded);
+          this.querySelector('.toggle-arrow').style.transform = !expanded ? 'rotate(180deg)' : '';
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>

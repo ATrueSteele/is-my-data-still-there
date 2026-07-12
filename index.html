@@ -173,12 +173,10 @@
       font-weight: 600;
       display: block;
       margin-bottom: 0.2rem;
-      font-size: 0.75rem;
     }
 
     .zoom-note .zoom-method {
       margin-bottom: 0.4rem;
-      font-size: 0.75rem;
     }
 
     .zoom-note kbd {
@@ -1106,10 +1104,14 @@
           at risk, or past its expected safe lifespan.
         </p>
 
-        <div class="calc-placeholder" role="region" aria-label="Calculator coming soon">
-          <p class="calc-placeholder-label">[ Calculator ] <span class="blink" aria-hidden="true">_</span></p>
-          <p>The interactive data lifespan calculator will appear here.</p>
-        </div>
+        <iframe
+          src="calculator.html"
+          width="100%"
+          height="820"
+          style="border: none; display: block; margin-top: 1.5rem; border-radius: 4px;"
+          title="Data lifespan calculator"
+          aria-label="Interactive data lifespan calculator">
+        </iframe>
       </div>
     </section>
 

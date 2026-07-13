@@ -158,6 +158,18 @@
       outline-offset: 2px;
     }
 
+    .a11y-toggle {
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--cyan);
+  cursor: pointer;
+  padding: 0;
+  letter-spacing: 0.05em;
+}
+    
     /* ── ZOOM NOTE ── */
     .zoom-note {
       font-family: var(--font-body);
@@ -1282,7 +1294,14 @@
       } catch(e) {}
 
       fontBtns.forEach(btn => btn.addEventListener('click', () => setFont(btn.dataset.font)));
-
+const a11yToggle = document.getElementById('a11y-toggle');
+const a11yContent = document.getElementById('a11y-content');
+a11yToggle.addEventListener('click', function() {
+  const expanded = this.getAttribute('aria-expanded') === 'true';
+  this.setAttribute('aria-expanded', !expanded);
+  a11yContent.style.display = expanded ? 'none' : 'block';
+  this.querySelector('.toggle-arrow').style.transform = expanded ? '' : 'rotate(180deg)';
+});
       // Collapsible cards
       document.querySelectorAll('.card-toggle').forEach(toggle => {
         toggle.addEventListener('click', function() {

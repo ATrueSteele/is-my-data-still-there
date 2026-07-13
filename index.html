@@ -159,17 +159,32 @@
     }
 
     .a11y-toggle {
-  background: none;
-  border: none;
-  font-family: var(--font-body);
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--cyan);
-  cursor: pointer;
-  padding: 0;
-  letter-spacing: 0.05em;
-}
-    
+      background: none;
+      border: none;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--cyan);
+      cursor: pointer;
+      padding: 0;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .a11y-toggle:focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    .a11y-toggle .toggle-arrow {
+      font-size: 0.75rem;
+      transition: transform 0.2s;
+      display: inline-block;
+    }
+
     /* ── ZOOM NOTE ── */
     .zoom-note {
       font-family: var(--font-body);
@@ -786,23 +801,24 @@
   <!-- ACCESSIBILITY BAR -->
   <div class="a11y-bar" role="region" aria-label="Accessibility options">
     <button class="a11y-toggle" id="a11y-toggle" aria-expanded="false" aria-controls="a11y-content">
-  Accessibility options <span class="toggle-arrow" aria-hidden="true">▼</span>
-</button>
-<div id="a11y-content" style="display:none;">    <p class="a11y-note"><strong>Accessibility note on font style:</strong> This site uses Y2K-era display fonts by design, but you can switch to a more readable font at any time.</p>
-    <div class="a11y-controls">
-      <div class="a11y-group" role="group" aria-label="Font style">
-        <span class="a11y-group-label">Font style:</span>
-        <button class="a11y-btn active" data-font="font-y2k" aria-pressed="true">Y2K (as designed)</button>
-        <button class="a11y-btn" data-font="font-readable" aria-pressed="false">Readable (clearer text)</button>
-        <button class="a11y-btn" data-font="font-accessible" aria-pressed="false">High legibility (largest text)</button>
+      Accessibility Options <span class="toggle-arrow" aria-hidden="true">▼</span>
+    </button>
+    <div id="a11y-content" style="display:none; padding-top: 0.75rem;">
+      <p class="a11y-note"><strong>Accessibility note on font style:</strong> This site uses Y2K-era display fonts by design, but you can switch to a more readable font at any time.</p>
+      <div class="a11y-controls">
+        <div class="a11y-group" role="group" aria-label="Font style">
+          <span class="a11y-group-label">Font style:</span>
+          <button class="a11y-btn active" data-font="font-y2k" aria-pressed="true">Y2K (as designed)</button>
+          <button class="a11y-btn" data-font="font-readable" aria-pressed="false">Readable (clearer text)</button>
+          <button class="a11y-btn" data-font="font-accessible" aria-pressed="false">High legibility (largest text)</button>
+        </div>
       </div>
-    </div>
-     </div>
-    <div class="zoom-note" role="note">
-      <strong>Note on text size:</strong>
-      <p class="zoom-method">If you changed the font using the buttons above and still find the text difficult to read, your browser has a built-in zoom feature that can make everything larger and easier to see.</p>
-      <p class="zoom-method"><strong>Using your keyboard:</strong> Hold the <kbd>Ctrl</kbd> key (Windows) or <kbd>Command</kbd> key (Mac) and press the <kbd>+</kbd> key to make text larger. Press <kbd>Ctrl</kbd>/<kbd>Command</kbd> and <kbd>−</kbd> to make it smaller again.</p>
-      <p class="zoom-method"><strong>Using your browser menu:</strong> Look for three small dots or three small lines in the top right corner of your browser window. Click on that and look for a Zoom option. You will see a percentage — 100% is the normal size. Click the + next to that percentage to make everything larger. Most people find 125% or 150% comfortable for reading.</p>
+      <div class="zoom-note" role="note">
+        <strong>Note on text size:</strong>
+        <p class="zoom-method">If you changed the font using the buttons above and still find the text difficult to read, your browser has a built-in zoom feature that can make everything larger and easier to see.</p>
+        <p class="zoom-method"><strong>Using your keyboard:</strong> Hold the <kbd>Ctrl</kbd> key (Windows) or <kbd>Command</kbd> key (Mac) and press the <kbd>+</kbd> key to make text larger. Press <kbd>Ctrl</kbd>/<kbd>Command</kbd> and <kbd>−</kbd> to make it smaller again.</p>
+        <p class="zoom-method"><strong>Using your browser menu:</strong> Look for three small dots or three small lines in the top right corner of your browser window. Click on that and look for a Zoom option. You will see a percentage — 100% is the normal size. Click the + next to that percentage to make everything larger. Most people find 125% or 150% comfortable for reading.</p>
+      </div>
     </div>
   </div>
 
@@ -1294,14 +1310,17 @@
       } catch(e) {}
 
       fontBtns.forEach(btn => btn.addEventListener('click', () => setFont(btn.dataset.font)));
-const a11yToggle = document.getElementById('a11y-toggle');
-const a11yContent = document.getElementById('a11y-content');
-a11yToggle.addEventListener('click', function() {
-  const expanded = this.getAttribute('aria-expanded') === 'true';
-  this.setAttribute('aria-expanded', !expanded);
-  a11yContent.style.display = expanded ? 'none' : 'block';
-  this.querySelector('.toggle-arrow').style.transform = expanded ? '' : 'rotate(180deg)';
-});
+
+      // Accessibility bar toggle
+      const a11yToggle = document.getElementById('a11y-toggle');
+      const a11yContent = document.getElementById('a11y-content');
+      a11yToggle.addEventListener('click', function() {
+        const expanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', !expanded);
+        a11yContent.style.display = expanded ? 'none' : 'block';
+        this.querySelector('.toggle-arrow').style.transform = expanded ? '' : 'rotate(180deg)';
+      });
+
       // Collapsible cards
       document.querySelectorAll('.card-toggle').forEach(toggle => {
         toggle.addEventListener('click', function() {

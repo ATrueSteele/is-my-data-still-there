@@ -486,22 +486,22 @@
       statusClass = 'status-ok';
       statusLabel = '✅ Likely intact';
       statusText  = 'Cloud storage is ongoing';
-      message     = 'Cloud storage is currently the most reliable option for data preservation — as long as your account remains active and the service continues to operate. Remember: even cloud storage should have a local backup. Consider keeping a copy on an external SSD as a failsafe.';
+      message     = 'Cloud storage is currently the most reliable option for data preservation, as long as your account stays active and the service is in operation. However, consider keeping a copy on an external SSD as a local backup. See the 3-2-1 rule below for more tips.';
     } else if (remaining > 10) {
       statusClass = 'status-ok';
       statusLabel = '✅ Likely intact';
       statusText  = 'Your data appears to be within its safe lifespan.';
-      message     = 'Based on the information you provided, your data is likely still accessible — but don\'t wait too long. Backing up now while the hardware to read it still exists is always the safer choice.';
+      message     = 'Your data is likely still accessible, but don\'t wait too long to back it up. Backing up now while the hardware to read it still exists is always a safe choice.';
     } else if (remaining > 0) {
       statusClass = 'status-warn';
       statusLabel = '⚠ At risk';
       statusText  = 'Your data is approaching the end of its safe lifespan.';
-      message     = 'You are within 10 years of the estimated end of this medium\'s safe lifespan. The window to act is narrowing. Back up your data to a current format as soon as possible.';
+      message     = 'You are within 10 years of the estimated end of this storage medium\'s safe lifespan. Backing up your data to a current format is a safe choice.';
     } else {
       statusClass = 'status-critical';
       statusLabel = '🚨 Critical';
       statusText  = 'Your data may already be lost or unreadable.';
-      message     = 'Based on the information you provided, this medium has likely passed its estimated safe lifespan. Your data may still be recoverable — but time is critical. Try accessing it now while the hardware still exists, and transfer it to a current format immediately.';
+      message     = 'This type of storage medium has likely passed its estimated safe lifespan. Your data may still be recoverable but time is of the essence. Try accessing it now while the hardware still exists, and transfer it to a current format for preservation.';
     }
 
     // Populate result panel

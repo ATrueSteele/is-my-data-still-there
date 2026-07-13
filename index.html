@@ -773,7 +773,10 @@
 
   <!-- ACCESSIBILITY BAR -->
   <div class="a11y-bar" role="region" aria-label="Accessibility options">
-    <p class="a11y-note"><strong>Accessibility note on font style:</strong> This site uses Y2K-era display fonts by design, but you can switch to a more readable font at any time.</p>
+    <button class="a11y-toggle" id="a11y-toggle" aria-expanded="false" aria-controls="a11y-content">
+  Accessibility options <span class="toggle-arrow" aria-hidden="true">▼</span>
+</button>
+<div id="a11y-content" style="display:none;">    <p class="a11y-note"><strong>Accessibility note on font style:</strong> This site uses Y2K-era display fonts by design, but you can switch to a more readable font at any time.</p>
     <div class="a11y-controls">
       <div class="a11y-group" role="group" aria-label="Font style">
         <span class="a11y-group-label">Font style:</span>
@@ -782,6 +785,7 @@
         <button class="a11y-btn" data-font="font-accessible" aria-pressed="false">High legibility (largest text)</button>
       </div>
     </div>
+     </div>
     <div class="zoom-note" role="note">
       <strong>Note on text size:</strong>
       <p class="zoom-method">If you changed the font using the buttons above and still find the text difficult to read, your browser has a built-in zoom feature that can make everything larger and easier to see.</p>
